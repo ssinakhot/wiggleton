@@ -5,7 +5,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -13,8 +12,9 @@ import (
 	"wiggleton/server/common"
 )
 
-
 func RunServer() {
+	go startDisgordBot()
+
 	e := echo.New()
 	e.HideBanner = true
 
@@ -42,7 +42,7 @@ func setupRoutes(e *echo.Echo) {
 func getConfig(c echo.Context) error {
 	const scope = "channel:manage:redemptions bits:read channel:read:redemptions"
 	href := fmt.Sprintf("https://id.twitch.tv/oauth2/authorize?client_id=%s&redirect_uri=%s&response_type=token&scope=%s", common.Config.ClientId, common.Config.RedirectUrl, url.PathEscape(scope))
-	return c.JSON(http.StatusOK, map[string]interface{}{ "oauthUrl": href, "clientId": common.Config.ClientId })
+	return c.JSON(http.StatusOK, map[string]interface{}{"oauthUrl": href, "clientId": common.Config.ClientId})
 }
 
 func createRedemption(c echo.Context) error {
@@ -50,11 +50,11 @@ func createRedemption(c echo.Context) error {
 	game := c.QueryParam("game")
 	command := c.QueryParam("command")
 	redemptionDirectories := strings.Split(common.Config.RedemptionDirectory, "|")
-	for  _, directory := range redemptionDirectories {
-		os.MkdirAll(directory + game, 0777)
+	for _, directory := range redemptionDirectories {
+		os.MkdirAll(directory+game, 0777)
 		fileName := directory + game + "\\" + redemptionId
-		err := ioutil.WriteFile(fileName + ".txt.lock", []byte(command), 0777)
-		os.Rename(fileName + ".txt.lock", fileName + ".txt")
+		err := ioutil.WriteFile(fileName+".txt.lock", []byte(command), 0777)
+		os.Rename(fileName+".txt.lock", fileName+".txt")
 		if err != nil {
 			log.Println("error createRedemption:", err)
 			return c.NoContent(http.StatusInternalServerError)
