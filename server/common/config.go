@@ -8,9 +8,6 @@ type AppConfig struct {
 	ClientSecret        string
 	RedirectUrl         string
 	RedemptionDirectory string
-	DisgordToken        string
-	BotChannelId        string
-	OpenAIToken         string
 }
 
 func (*AppConfig) Init() {
@@ -50,23 +47,5 @@ var ConfigFlags = []cli.Flag{
 		EnvVars:     []string{"REDEMPTION_DIRECTORY"},
 		Required:    true,
 		Destination: &Config.RedemptionDirectory,
-	},
-	&cli.StringFlag{
-		Name:        "disgord-token",
-		EnvVars:     []string{"DISGORD_TOKEN"},
-		Required:    true,
-		Destination: &Config.DisgordToken,
-	},
-	&cli.StringFlag{
-		Name:        "bot-channel-id",
-		EnvVars:     []string{"BOT_CHANNEL_ID"},
-		Required:    true,
-		Destination: &Config.BotChannelId,
-	},
-	&cli.StringFlag{
-		Name:        "openai-token",
-		EnvVars:     []string{"OPENAI_TOKEN"},
-		Required:    true,
-		Destination: &Config.OpenAIToken,
 	},
 }

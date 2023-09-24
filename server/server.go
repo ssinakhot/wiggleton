@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -13,8 +14,6 @@ import (
 )
 
 func RunServer() {
-	go startDisgordBot()
-
 	e := echo.New()
 	e.HideBanner = true
 
